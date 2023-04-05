@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reading page</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf_viewer.min.css" rel="stylesheet"
+          type="text/css"/>
+    <style>
+        .wrapper {
+            width: 800px;
+            margin: 150px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0px 10px 40px 0px rgba(47, 47, 47, .1);
+        }
+    </style>
+
+    <style>
+        .wrapper {
+            width: 800px;
+            margin: 150px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0px 10px 40px 0px rgba(47, 47, 47, .1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to top right,
+            #fc2c77 0%,
+            #6c4079 100%);
+        }*/
+
+        .container {
+            max-width: 600px;
+            background: #fff;
+            border-radius: 5px;
+            width: 600px;
+            padding: 20px;
+            box-shadow: 0 2px 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 40px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e4e1e1;
+        }
+
+        .add {
+            text-decoration: none;
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #8bc34a;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flex {
+            display: flex;
+            gap: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .delete {
+            text-decoration: none;
+            /*display: inline-block;*/
+            background: #f44336;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 30px;
+            height: 30px;
+            margin-left: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 8px 10px;
+            background: #ddd;
+            border: none;
+            width: 50%;
+            border-radius: 5px;
+        }
+
+        input:focus {
+            outline: 1px solid #efefef;
+        }
+
+        .inp-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body onload="LoadPdfFromUrl('http://localhost:8080/static/downloads/123.pdf')">
+<div class="alert-warning" th:value="${complete}"></div>
+<div class="container" style="text-align: center">
+    <h2 th:text="${content.title}"></h2>
+    <h2 th:text="${content.author}"></h2>
+</div>
+<div style="text-align: right">
+    <span th:text="'Maximum score: '+${content.score}"></span>
+    <br>
+</div>
+
+<div class="row" style="margin-left: fill">
+    <div id="pdf_container" class="col-lg-7 bg-body-secondary col--dialog-scrollablesm-11 m-4"></div>
+    <div class="col-lg-4 bg-body-secondary col-sm-11 mx-4">
+        <h1>Translator</h1>
+        <section>
+            <div class="input  ">
+                <label>
+                    <span>English 🇬🇧</span>
+                    <textarea id="input" placeholder=" " rows="9" class="form-control  col-md-12 fs-5"
+                              oninput="myFunction()"></textarea>
+                </label>
+            </div>
+            <div class="output">
+                <label>
+                    <span>Uzbek🇺🇿</span>
+                    <textarea rows="9" id="output" readonly="readonly"
+                              class="form-control  col-md-12 fs-5">
+                        </textarea>
+                </label>
+            </div>
+            <br>
+        </section>
+    </div>
+    <div th:if="${vocabularies.size()==0}">
+        <form method="post" th:action="@{/practise/words/add/{id}(id=${content.id})}">
+            <div class="container">
+                <div class="wrap">
+                    <h2>Add vocabularies</h2>
+                    <button href="#" class="add" type="button">+</button>
+                </div>
+                <div>
+                    <span>You have to add at least 5 words to take a test and earn points :)</span>
+                </div>
+                <div class="inp1-group">
+                    <div class="flex">
+                        <input type="text" name="word1" placeholder="english" required>
+                        <input type="text" name="translation1" placeholder="translation" required>
+                        <input type="text" name="definition1" placeholder="definition">
+                    </div>
+                    <div class="flex">
+                        <input type="text" name="word2" placeholder="english" required>
+                        <input type="text" name="translation2" placeholder="translation" required>
+                        <input type="text" name="definition2" placeholder="definition">
+                    </div>
+                    <div class="flex">
+                        <input type="text" name="word3" placeholder="english" required>
+                        <input type="text" name="translation3" placeholder="translation" required>
+                        <input type="text" name="definition3" placeholder="definition">
+                    </div>
+                    <div class="flex">
+                        <input type="text" name="word4" placeholder="english" required>
+                        <input type="text" name="translation4" placeholder="translation" required>
+                        <input type="text" name="definition4" placeholder="definition">
+                    </div>
+                    <div class="flex">
+                        <input type="text" name="word5" placeholder="english" required>
+                        <input type="text" name="translation5" placeholder="translation" required>
+                        <input type="text" name="definition5" placeholder="definition">
+                    </div>
+                </div>
+                <div class="inp-group">
+
+                </div>
+                <button class="btn btn-primary" type="submit">Add all</button>
+            </div>
+        </form>
+
+    </div>
+    <div th:if="${vocabularies.size()!=0}">
+        <form method="post" th:action="@{/practise/words/add/{id}(id=${content.id})}">
+            <div class="container">
+                <div class="wrap">
+                    <h2>Add vocabularies</h2>
+                    <button class="add" type="button">+</button>
+                </div>
+                <div>
+                    <span>You have to add at least 5 words to take a test and earn points :)</span>
+                </div>
+
+                <div class="inp-group">
+
+                </div>
+                <button class="btn btn-primary" type="submit">Add all</button>
+            </div>
+        </form>
+
+    </div>
+
+    <br>
+    <div class="container" th:if="${vocabularies.size()!=0}">
+        <button class="btn btn-primary btn-sm" onclick="myFunction1()">My words</button>
+        <div id="myDIV" style="display: none">
+            <div class="inp-group" th:each="vocabulary : ${vocabularies}">
+                <form method="post" th:action="@{/practise/words/update/{id}(id=${vocabulary.id})}">
+                    <div class="flex">
+                        <input type="text" name="word" placeholder="english" required
+                               th:value="${vocabulary.word}">
+                        <input type="text" name="translation" placeholder="translation" required
+                               th:value="${vocabulary.translation}">
+                        <input type="text" name="definition" placeholder="definition"
+                               th:value="${vocabulary.definition}">
+                        <button class="btn btn-warning btn-sm" type="submit">Update</button>
+                    </div>
+                </form>
+                <form method="post" th:action="@{/practise/words/delete/{id}(id=${vocabulary.id})}">
+                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <form th:action="@{/practise/story/comments/add/{id}(id=${content.id})}" method="post">
+            <div class="col-md-4 offset-1">
+                <label for="comment1">Comment</label>
+                <textarea placeholder="Leave your comment" class="form-control" id="comment1" name="comment"
+                          rows="4"></textarea>
+            </div>
+            <br>
+            <div class="col-md-4 offset-1">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </form>
+
+        <div th:if="${comments.size()==0}">
+            <div class="col-md-5 offset-1" style="margin-left: 25px; background-color: #e9ecef; border-radius: 5px">
+                <div style="margin-left: 30px">No comments</div>
+            </div>
+        </div>
+
+        <div th:if="${comments.size()!=0}">
+
+            <br>
+            <div class="wrapper">
+                <div class="col-md-5 offset-1" style="margin-left: 25px; background-color: #e9ecef; border-radius: 5px">
+                    <div style="margin-left: 30px">
+                        <br>
+                        <h3 style="text-align: center">Comments</h3>
+                        <br>
+                    </div>
+                </div>
+                <br><br>
+                <div th:each="comment, c : ${comments}">
+                    <div class="col-md-5 offset-1"
+                         style="margin-left: 25px; background-color: #e9ecef; border-radius: 5px">
+                        <div th:if="${comment.userId.id.equals(userId)}">
+                            <div>
+                                <form th:action="@{/practise/story/comments/update/{id}(id=${comment.id})}"
+                                      method="post">
+                                    <textarea name="comment" th:text="${comment.comment}"></textarea>
+                                    <button class="btn btn-primary btn-sm" type="submit">Update</button>
+                                </form>
+                                <form method="post"
+                                      th:action="@{/practise/story/comments/delete/{id}(id=${comment.id})}">
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div th:unless="${comment.userId.id.equals(userId)}" style="margin-left: 30px">
+                            <strong th:utext="${comment.comment}"></strong>
+                        </div>
+                        <div>
+                            <p style="margin-left: 5px"
+                               th:text="${#temporals.format(comment.createdAt, 'HH:mm dd-MM-yyyy')}"></p>
+                            <form th:unless="${comment.userId.id.equals(userId)}"
+                                  th:action="@{/users/see/{id}(id=${comment.userId?.id})}">
+                                <button class="btn btn-primary btn-sm"
+                                        style="margin-left: 5px; background-color: #0a53be"
+                                        th:text="'commented by '+${comment.userId?.username}"></button>
+                            </form>
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    th:onclick="'reply(\''+${comment.id}+'\');'">
+                                Reply
+                            </button>
+                            <div th:id="${comment.id}" style="display: none">
+                                <form th:action="@{/practise/story/comments/add/{id}(id=${content.id})}" method="post">
+                                    <input type="hidden" name="parentId" th:value="${comment.id}">
+                                    <div class="col-md-4 offset-1">
+                                        <label for="comment">Comment</label>
+                                        <textarea placeholder="Leave your comment" class="form-control" id="comment"
+                                                  name="comment"
+                                                  rows="4"></textarea>
+                                    </div>
+                                    <label>
+                                        <h6>Send as</h6>
+                                        <select name="commentType">
+                                            <option value="COMMENT" selected>Comment</option>
+                                            <option value="ANSWER">Answer</option>
+                                        </select>
+                                    </label>
+                                    <br>
+                                    <div class="col-md-4 offset-1">
+                                        <button class="btn btn-primary" type="submit">Send</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+
+    function myFunction() {
+        const x = document.getElementById("input").value;
+        const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=uz&dt=t&q=" + x; //console.log(url);
+        $.getJSON(url, function (data) {
+            $('textarea#output').val(data[0][0][0]);
+        });
+    }
+
+
+    var pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+    var pdfDoc = null;
+    var scale = 2.5;
+    if (IsMobile()) {
+        scale = 1.7
+    }
+    var resolution = IsMobile() ? 1.5 : 1; //Set Resolution as per Desktop and Mobile.
+
+    function LoadPdfFromUrl(url) {
+        //Read PDF from URL.
+        console.log(url)
+        pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+            pdfDoc = pdfDoc_;
+
+            //Reference the Container DIV.
+            var pdf_container = document.getElementById("pdf_container");
+            pdf_container.style.display = "block";
+            pdf_container.style.height = IsMobile() ? "1200px" : "820px";
+
+            //Loop and render all pages.
+            for (var i = 1; i <= pdfDoc.numPages; i++) {
+                RenderPage(pdf_container, i);
+            }
+        });
+    };
+
+    function RenderPage(pdf_container, num) {
+        pdfDoc.getPage(num).then(function (page) {
+            //Create Canvas element and append to the Container DIV.
+            var canvas = document.createElement('canvas');
+            canvas.id = 'pdf-' + num;
+            ctx = canvas.getContext('2d');
+            pdf_container.appendChild(canvas);
+
+            //Create and add empty DIV to add SPACE between pages.
+            var spacer = document.createElement("div");
+            spacer.style.height = "20px";
+            pdf_container.appendChild(spacer);
+
+            //Set the Canvas dimensions using ViewPort and Scale.
+            var viewport = page.getViewport({scale: scale});
+            canvas.height = resolution * viewport.height;
+            canvas.width = resolution * viewport.width;
+
+            //Render the PDF page.
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport,
+                transform: [resolution, 0, 0, resolution, 0, 0]
+            };
+
+            page.render(renderContext);
+        });
+    };
+
+    function IsMobile() {
+        var r = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini");
+        return r.test(navigator.userAgent);
+    }
+</script>
+<script>
+    const addBtn = document.querySelector(".add");
+    const input = document.querySelector(".inp-group");
+
+    function removeInput(e) {
+        this.parentElement.remove();
+    }
+
+    function addInput() {
+        const englishWord = document.createElement("input");
+        englishWord.type = "text";
+        englishWord.placeholder = "english";
+        englishWord.setAttribute("required", "")
+        englishWord.setAttribute("name", "englishWord");
+
+        const uzbekWord = document.createElement("input");
+        uzbekWord.type = "text";
+        uzbekWord.placeholder = "translation";
+        uzbekWord.setAttribute("required", "");
+        uzbekWord.setAttribute("name", "uzbekWord");
+
+        const definition = document.createElement("input");
+        definition.type = "text";
+        definition.placeholder = "definition";
+        definition.setAttribute("name", "definition");
+
+        const btn = document.createElement("a");
+        btn.c1assName = "delete";
+        btn.innerHTML = "&times";
+        btn.className = "delete";
+
+        btn.addEventListener("click", removeInput);
+
+        const flex = document.createElement("div")
+        flex.className = "flex";
+
+        input.appendChild(flex);
+
+        flex.appendChild(englishWord);
+        flex.appendChild(uzbekWord);
+        flex.appendChild(definition);
+        flex.appendChild(btn);
+    }
+
+    addBtn.addEventListener("click", addInput);
+</script>
+<script>
+    function myFunction1() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function reply(a) {
+        var x = document.getElementById(a);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>

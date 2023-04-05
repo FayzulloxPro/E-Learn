@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+<form method="post" th:action="@{/auth/login}">
+    <div id="container" class="container">
+        <!-- FORM SECTION -->
+        <div class="row">
+            <!-- SIGN UP -->
+            <div class="col align-items-center flex-col sign-up">
+                <div class="form-wrapper align-items-center">
+                    <div class="form sign-up">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" placeholder="Username">
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bx-mail-send'></i>
+                            <input type="email" placeholder="Email">
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" placeholder="Password">
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" placeholder="Confirm password">
+                        </div>
+                        <button>
+                            Sign up
+                        </button>
+                        <p>
+							<span>
+								Already have an account?
+							</span>
+                            <b onclick="toggle()" class="pointer">
+                                Sign in here
+                            </b>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END SIGN UP -->
+            <!-- SIGN IN -->
+            <div class="col align-items-center flex-col sign-in">
+                <div class="form-wrapper align-items-center">
+                    <div class="form sign-in">
+                        <div style="color: red" th:if="${error}">
+                            <snap class="small text-left" th:text="${error}"></snap>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" placeholder="Username" id="username" name="uname">
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" placeholder="Password" id="password" name="pswd">
+                        </div>
+
+                        <div style="display: flex; align-items: center; margin-bottom: 15px; margin-left: 2px; margin-top: 15px">
+                            <input type="checkbox" id="rememberMe" name="rememberMe" checked>
+                            <label for="rememberMe" style="margin-left: 5px; ">Remember me</label>
+                        </div>
+
+                        <button type="submit">
+                            Sign in
+                        </button>
+                        <p> or Continue with</p>
+                        <div>
+
+                            <a class="btn btn-primary" style="display: inline-block; /*margin-top: 15px;*/ width: 135px; text-align: center; text-decoration: none; color: #fff; font-weight: 500; padding: 11px 13px; border-radius: 10px; background-color: #4267B2;" href="http://localhost:8080/oauth2/authorization/facebook">
+                                <i class="fa fa-facebook fa-fw"></i>Facebook
+                            </a>
+
+                            <a class="btn btn-primary" style="display: inline-block; /*margin-top: 15px;*/ width: 135px; text-align: center; text-decoration: none; color: #fff; font-weight: 500; padding: 11px 13px; border-radius: 10px; background-color: #DB4437;" href="http://localhost:8080/oauth2/authorization/google">
+                                <i class="fa fa-facebook fa-fw"></i>Google
+                            </a>
+
+                            <a class="btn btn-primary" style="display: inline-block; /*margin-top: 15px;*/ width: 135px; text-align: center; text-decoration: none; color: #fff; font-weight: 500; padding: 11px 13px; border-radius: 10px; background-color: #007bff;" href="http://localhost:8080/oauth2/authorization/facebook">
+                                <i class="fa fa-facebook fa-fw"></i>LinkedIn
+                            </a>
+
+<!--                            <a class="btn btn-primary" style="display: inline-block; margin-top: 15px; width: 135px; text-align: center; text-decoration: none; color: #fff; font-weight: 500; padding: 6px 12px; border-radius: 20px; background-color: #007bff;" href="http://localhost:8080/oauth2/authorization/facebook">-->
+<!--                                <i class="fa fa-facebook fa-fw"></i>Facebook-->
+<!--                            </a>-->
+
+
+<!--                            <div style="display: inline-block; margin-top: 15px; width: 135px">-->
+<!--                                <button href="/oauth2/authorization/google" type="button">-->
+<!--                                    <i class="fa fa-google fa-fw"></i> Google-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                            <div style="display: inline-block; margin-top: 15px; width: 135px">-->
+<!--                                <button href="#" onclick="location.href=''">-->
+<!--                                    <i class="fa fa-github fa-fw"></i> Github-->
+<!--                                </button>-->
+<!--                            </div>-->
+                        </div>
+                        <p>
+                            <b>
+                                Forgot password?
+                            </b>
+                        </p>
+                        <p>
+							<span>
+								Don't have an account?
+							</span>
+                            <b onclick="location.href='/auth/register'" class="pointer">
+                                Sign up here
+                            </b>
+                        </p>
+                    </div>
+                </div>
+                <div class="form-wrapper">
+
+                </div>
+            </div>
+            <!-- END SIGN IN -->
+        </div>
+        <!-- END FORM SECTION -->
+        <!-- CONTENT SECTION -->
+        <div class="row content-row">
+            <!-- SIGN IN CONTENT -->
+            <div class="col align-items-center flex-col">
+                <div class="text sign-in">
+                    <h2>
+                        Welcome
+                    </h2>
+
+                </div>
+                <div class="img sign-in">
+
+                </div>
+            </div>
+            <!-- END SIGN IN CONTENT -->
+            <!-- SIGN UP CONTENT -->
+            <div class="col align-items-center flex-col">
+                <div class="img sign-up">
+
+                </div>
+                <div class="text sign-up">
+                    <h2>
+                        Join with us
+                    </h2>
+
+                </div>
+            </div>
+            <!-- END SIGN UP CONTENT -->
+        </div>
+        <!-- END CONTENT SECTION -->
+    </div>
+</form>
+<script>
+    let container = document.getElementById('container');
+
+    toggle = () => {
+        container.classList.toggle('sign-in');
+        container.classList.toggle('sign-up');
+    }
+
+    setTimeout(() => {
+        container.classList.add('sign-in');
+    }, 200);
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .wrapper {
+            width: 800px;
+            margin: 150px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0px 10px 40px 0px rgba(47, 47, 47, .1);
+        }
+    </style>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">    <title>Grammar topics</title>
+</head>
+<body>
+<br><br><br>
+<div style="margin-left: 10%">
+    <a href="/practise/grammar" class="btn btn-primary" style="margin-left: fill"> Back </a>
+</div>
+<br><br>
+<div th:if="${grammars.size()==0}" class="wrapper" style="background-color: palevioletred">
+    <h1 style="text-align: center">There are no grammar topics found!</h1>
+</div>
+<div th:unless="${grammars.size()==0}">
+    <div th:if="${#bools.isFalse(flag)}" class="container">
+        <h4 class="alert-warning" style="text-align: center; background-color: #ffcd39; border-radius: 10px">
+            <br>
+            You will
+            not be given any points even you read the grammar topic. <br>
+            Because these topics are not suitable for your current level.
+            <br>
+            <br>
+        </h4>
+    </div>
+    <h1 style="text-align: center; background-color: #20c997; border-radius: 20px" class="container">Grammar topics</h1>
+    <table style="border-radius: 5px" class="table table-striped container">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Teacher</th>
+            <th>Score</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="grammar, counter:${grammars}">
+            <td th:text="${counter.count}"></td>
+            <td th:text="${grammar.title}"></td>
+            <td th:text="${grammar.author}"></td>
+            <td th:text="${grammar.score}"></td>
+            <td><a class="btn btn-primary" th:href="@{'/practise/grammars/'+${grammar.id}}">Start reading</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

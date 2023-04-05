@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(~{::title},~{::link})}">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+<section th:replace="fragments :: navbar"></section>
+    <div class="col-md-4 offset-1">
+        <a class="btn btn-primary" href="/practise">Practises</a>
+    </div>
+
+<section th:replace="fragments :: js_links"></section>
+</body>
+</html>

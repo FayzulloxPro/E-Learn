@@ -1,0 +1,155 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css"/>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+
+<div class="container mt-10">
+    <table id="example" class="table table-striped" style="width:100%">
+        <thead>
+        <tr>
+            <th>N</th>
+            <th>Username</th>
+            <th>Full name</th>
+            <th>Email</th>
+            <th>BirthDate</th>
+            <th>Level</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Update Role</th>
+            <th>Unblock</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user :${users}" th:if="${#authentication.name}!=${user.getUsername()}">
+            <td th:text="${#ids.seq(0)}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getFirstName()}">Name</td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getBirthDate()}"></td>
+            <td th:text="${user.getLevel()}"></td>
+            <td th:text="${user.getScore()}"></td>
+            <td th:text="${user.getStatus()}"></td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary " type="button" data-bs-target="#updateRole"
+                            data-bs-toggle="modal" th:onclick="changeRoleHelper([[${user.getId()}]])">
+                        Change Role
+                    </button>
+                </div>
+            </td>
+            <td>
+                <button class="btn " type="button" th:onclick="changeActivatedHelperFunc([[${user.getId()}]])"
+                        data-bs-target="#updateStatus" data-bs-toggle="modal"
+                        th:classappend="${user.getStatus()==user.getStatus().BLOCKED} ? 'btn-outline-success':'btn-outline-danger'"
+                        th:text="${user.getStatus()==user.getStatus().BLOCKED} ? 'Unblock':'Block'">
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="updateStatus" tabindex="-1" aria-labelledby="updateStatusLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="admin/updateStatus">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateStatusLabel">Update user status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" name="updated_id" id="updated">
+                <div class="modal-body">
+                    Do you really want to update status this user?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateRole" tabindex="-1" aria-labelledby="updateRoleLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="admin/updateRole">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateRoleLabel">Update user Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" name="updated_id" id="updated_user">
+                <div class="modal-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" disabled checked>
+                        <label class="form-check-label" for="flexCheckDefault">
+                            User
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="isAdmin" value="ADMIN" id="admin">
+                        <label class="form-check-label" for="admin">
+                            Admin
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="isTeacher" value="TEACHER" id="teacher">
+                        <label class="form-check-label" for="teacher">
+                            Teacher
+                        </label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+
+
+<div class="modal fade" id="changeRoleModal" tabindex="-1" aria-labelledby="changeRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeRoleModalLabel">User change role </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/admin/change-role/*" id="new-line">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" value="${id}">
+                    <input type="hidden" name="role" id="role" value="${role}">
+                    Do you really change role this user?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min.js"></script>
+<script src="/js/choose.js"></script>
+<script src="/js/diagram.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable()
+    })
+</script>
+</body>
+</html>
